@@ -9,6 +9,8 @@ public class Gun : MonoBehaviour
     [SerializeField] private GameObject bulletPrefabs;
     [SerializeField] private float shotDelay = 0.15f;
     private float nextShot;
+    
+
     [SerializeField] private int maxAmmo = 24;
     public int currentAmmo;
  
@@ -16,10 +18,9 @@ public class Gun : MonoBehaviour
     {
         currentAmmo = maxAmmo;
     }
-
     void Update()
     {
-        RotateGun();
+         RotateGun();
         Shoot();
         Reload();
     }
