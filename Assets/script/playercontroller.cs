@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
     private bool isGrounded;
+    private bool wasGrounded;
+
     private int jumpCount;
     private float moveInput;
 
@@ -43,11 +45,11 @@ public class PlayerController : MonoBehaviour
     private void CheckGround()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-
-        if (isGrounded)
+        if (isGrounded && !wasGrounded && rb.linearVelocity.y <= 0)
         {
             jumpCount = 0;
         }
+        wasGrounded = isGrounded;
     }
 
     private void HandleMovement()
