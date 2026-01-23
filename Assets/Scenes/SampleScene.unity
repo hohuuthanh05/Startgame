@@ -512,8 +512,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2e6387800300f4799821ce273f065d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 15
+  moveSpeed: 10
   jumpForce: 15
+  jumpAnimationDelay: 0.3
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -1008,7 +1009,7 @@ GameObject:
   - component: {fileID: 838112434}
   - component: {fileID: 838112433}
   - component: {fileID: 838112432}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
