@@ -1,5 +1,4 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -31,20 +30,15 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         UpdateAnimation();
-
-        
-    
     }
 
     private void HandleJump()
 {
-    if (Input.GetButtonDown("Jump")&& isGrounded) 
+    isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+    if (Input.GetButtonDown("Jump") && isGrounded) 
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
     }
- isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-
-
 }
 
     private void HandleMovement()
@@ -60,10 +54,9 @@ public class PlayerController : MonoBehaviour
     private void UpdateAnimation()
     {
         bool isRunning = Mathf.Abs(rb.linearVelocity.x) > 0.1f;
-        bool isJumping = !isGrounded;
+        bool isJumping = !isGrounded && rb.linearVelocity.y > 0.05f;
         animator.SetBool("isRunning", isRunning);
         animator.SetBool("isJumping", isJumping);
- 
-        
+
     }
 }
