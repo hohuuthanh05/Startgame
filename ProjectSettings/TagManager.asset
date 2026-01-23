@@ -58,6 +58,9 @@ TagManager:
   - name: arrow
     uniqueID: 2703961123
     locked: 0
+  - name: Sword
+    uniqueID: 986288123
+    locked: 0
   - name: HP
     uniqueID: 2434728105
     locked: 0

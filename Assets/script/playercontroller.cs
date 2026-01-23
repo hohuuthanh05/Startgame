@@ -1,54 +1,64 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
+
+    [Header("Jump")]
     [SerializeField] private float jumpForce = 15f;
-    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
-    private Animator animator;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundCheckRadius = 0.2f;
 
     private bool isGrounded;
+    private bool canDoubleJump;
 
+    [Header("Dash")]
+    [SerializeField] private float dashSpeed = 20f;
+    [SerializeField] private float dashTime = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+
+    private bool isDashing;
+    private float dashTimeLeft;
+    private float nextDashTime;
 
     private Rigidbody2D rb;
+    private Animator animator;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-    }
-
-    void Start()
-    {
-
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        CheckGround();
         HandleMovement();
         HandleJump();
+        HandleDash();
         UpdateAnimation();
-
-        
-    
     }
 
-    private void HandleJump()
-{
-    if (Input.GetButtonDown("Jump")&& isGrounded) 
+    // ===================== GROUND CHECK =====================
+    void CheckGround()
     {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        isGrounded = Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundCheckRadius,
+            groundLayer
+        );
+
+        if (isGrounded)
+            canDoubleJump = true;
     }
- isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
-
-}
-
-    private void HandleMovement()
+    // ===================== MOVE =====================
+    void HandleMovement()
     {
+        if (isDashing) return;
+
         float moveInput = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
@@ -57,13 +67,61 @@ public class PlayerController : MonoBehaviour
         else if (moveInput < 0)
             transform.localScale = new Vector3(-1, 1, 1);
     }
-    private void UpdateAnimation()
+
+    // ===================== JUMP + DOUBLE JUMP =====================
+    void HandleJump()
     {
-        bool isRunning = Mathf.Abs(rb.linearVelocity.x) > 0.1f;
-        bool isJumping = !isGrounded;
-        animator.SetBool("isRunning", isRunning);
-        animator.SetBool("isJumping", isJumping);
- 
-        
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isGrounded)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            }
+            else if (canDoubleJump)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                canDoubleJump = false;
+            }
+        }
+    }
+
+    // ===================== DASH =====================
+    void HandleDash()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && Time.time > nextDashTime)
+        {
+            isDashing = true;
+            dashTimeLeft = dashTime;
+            nextDashTime = Time.time + dashCooldown;
+        }
+
+        if (isDashing)
+        {
+            dashTimeLeft -= Time.deltaTime;
+
+            float dashDir = transform.localScale.x;
+            rb.linearVelocity = new Vector2(dashDir * dashSpeed, 0);
+
+            if (dashTimeLeft <= 0)
+                isDashing = false;
+        }
+    }
+
+    // ===================== ANIMATION =====================
+    void UpdateAnimation()
+    {
+        if (animator == null) return;
+
+        animator.SetBool("isRunning", Mathf.Abs(rb.linearVelocity.x) > 0.1f);
+        animator.SetBool("isJumping", !isGrounded);
+    }
+
+    // ===================== DEBUG =====================
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }

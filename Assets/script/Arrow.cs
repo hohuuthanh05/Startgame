@@ -17,6 +17,6 @@ public class Arrow : MonoBehaviour
 
     void MoveArrow()
     {
-        transform.position += transform.right * moveSpeed * Time.deltaTime;
+        transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
     }
 }
