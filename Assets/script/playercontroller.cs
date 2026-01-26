@@ -16,13 +16,11 @@ public class PlayerController : MonoBehaviour
 
     private int jumpCount;
     private float moveInput;
-    private GameManager gameManager;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        gameManager = FindFirstObjectByType<GameManager>();
     }
 
     void Start()
@@ -32,7 +30,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {   
-        if (gameManager.IsGameOver()) return;
         moveInput = Input.GetAxis("Horizontal");
         CheckGround();
         HandleJumpInput();
@@ -41,7 +38,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (gameManager.IsGameOver()) return;
         HandleMovement();
         BetterJumpPhysics();
     }
