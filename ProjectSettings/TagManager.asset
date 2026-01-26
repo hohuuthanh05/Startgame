@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -12,8 +13,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - Player
+  - Boss
   - 
   - 
   - 
@@ -41,8 +42,20 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: player
+  - name: BackGround
+    uniqueID: 1332096513
+    locked: 0
+  - name: Ground
+    uniqueID: 2254415175
+    locked: 0
+  - name: ForGround
+    uniqueID: 3143516937
+    locked: 0
+  - name: Player
     uniqueID: 2374494473
+    locked: 0
+  - name: Boss
+    uniqueID: 2034384529
     locked: 0
   m_RenderingLayers:
   - Default
