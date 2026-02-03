@@ -1,59 +1,76 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 15f;
-    [SerializeField] private int maxJumpCount = 2;
-    [SerializeField] private float fallMultiplier = 2.5f;
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private Transform groundCheck;
-    private Animator animator;
-    private Rigidbody2D rb;
-    private bool isGrounded;
-    private bool wasGrounded;
 
-    private int jumpCount;
-    private float moveInput;
+    [Header("Jump")]
+    [SerializeField] private float jumpForce = 15f;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+
+    private bool isGrounded;
+    private bool canDoubleJump;
+
+    [Header("Dash")]
+    [SerializeField] private float dashSpeed = 20f;
+    [SerializeField] private float dashTime = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+    [SerializeField] private float maxHp = 100f;
+    private float currentHp;
+    [SerializeField] private Image hpBar;
+
+
+    private bool isDashing;
+    private float dashTimeLeft;
+    private float nextDashTime;
+
+    private Rigidbody2D rb;
+    private Animator animator;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
-
-    void Start()
+     void Start()
     {
-
+        currentHp = maxHp;
+        UpdateHpBar();
     }
 
     void Update()
-    {   
-        moveInput = Input.GetAxis("Horizontal");
+    {
         CheckGround();
-        HandleJumpInput();
+        HandleMovement();
+        HandleJump();
+        HandleDash();
         UpdateAnimation();
     }
 
-    private void FixedUpdate()
+    // ===================== GROUND CHECK =====================
+    void CheckGround()
     {
-        HandleMovement();
-        BetterJumpPhysics();
+        isGrounded = Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundCheckRadius,
+            groundLayer
+        );
+
+        if (isGrounded)
+            canDoubleJump = true;
     }
 
-    private void CheckGround()
+    // ===================== MOVE =====================
+    void HandleMovement()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-        if (isGrounded && !wasGrounded && rb.linearVelocity.y <= 0)
-        {
-            jumpCount = 0;
-        }
-        wasGrounded = isGrounded;
-    }
+        if (isDashing) return;
 
-    private void HandleMovement()
-    {
+        float moveInput = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
         if (moveInput > 0)
@@ -62,27 +79,98 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
     }
 
-    private void HandleJumpInput()
+    // ===================== JUMP + DOUBLE JUMP =====================
+    void HandleJump()
     {
-        if (Input.GetButtonDown("Jump") && jumpCount < maxJumpCount)
-        {   
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            jumpCount++;
-        }
-    }
-
-    private void BetterJumpPhysics()
-    {
-        if (rb.linearVelocity.y < 0)
+        if (Input.GetButtonDown("Jump"))
         {
-            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+            if (isGrounded)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            }
+            else if (canDoubleJump)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                canDoubleJump = false;
+            }
         }
     }
 
-    private void UpdateAnimation()
+    // ===================== DASH =====================
+    void HandleDash()
     {
+        if (Input.GetKeyDown(KeyCode.F) && Time.time > nextDashTime)
+        {
+            isDashing = true;
+            dashTimeLeft = dashTime;
+            nextDashTime = Time.time + dashCooldown;
+        }
+
+        if (isDashing)
+        {
+            dashTimeLeft -= Time.deltaTime;
+
+            float dashDir = transform.localScale.x;
+            rb.linearVelocity = new Vector2(dashDir * dashSpeed, 0);
+
+            if (dashTimeLeft <= 0)
+                isDashing = false;
+        }
+    }
+
+    // ===================== ANIMATION =====================
+    void UpdateAnimation()
+    {
+        if (animator == null) return;
+
         animator.SetBool("isRunning", Mathf.Abs(rb.linearVelocity.x) > 0.1f);
         animator.SetBool("isJumping", !isGrounded);
     }
+
+    // ===================== DEBUG =====================
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+    }
+    // ===================== DAMAGE =====================
+    public virtual void TakeDamage(float damage)
+{
+    currentHp -= damage;
+    currentHp = Mathf.Max(currentHp, 0);
+
+    UpdateHpBar();
+
+    if (currentHp <= 0)
+    {
+        Die();
+    }
+}
+
+
+    private void Die()
+{
+    Destroy(gameObject);
+}
+    private void UpdateHpBar()
+{
+    if (hpBar != null)
+    {
+        hpBar.fillAmount = currentHp / maxHp;
+    }
+
+}
+public void Heal(float healValue)
+{
+    if (currentHp < maxHp)
+    {
+        currentHp += healValue;
+        currentHp = Mathf.Min(currentHp, maxHp);
+
+    UpdateHpBar();
+    }
+}
+
 }

@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 15f;
-    [SerializeField] private float timeDestroy = 3f;
+    [SerializeField] private float moveSpeed = 25f;
+    [SerializeField] private float timeDestroy = 0.5f;
+    [SerializeField] private float damage = 1f;
+    [SerializeField] GameObject bloodPrefab;
 
     void Start()
     {
@@ -17,6 +19,20 @@ public class Arrow : MonoBehaviour
 
     void MoveArrow()
     {
-        transform.position += transform.right * moveSpeed * Time.deltaTime;
+        transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
     }
+     private void OnTriggerEnter2D(Collider2D collision)
+{
+    if (collision.CompareTag("Enemy"))
+    {
+        Enemy enemy = collision.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+            GameObject blood = Instantiate(bloodPrefab, transform.position, Quaternion.identity);
+            Destroy(blood, 1f);
+        }
+        Destroy(gameObject);
+    }
+}
 }
