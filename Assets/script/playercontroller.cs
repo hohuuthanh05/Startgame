@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashSpeed = 20f;
     [SerializeField] private float dashTime = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
+    [SerializeField] private float maxHp = 100f;
+    private float currentHp;
+    [SerializeField] private Image hpBar;
+
 
     private bool isDashing;
     private float dashTimeLeft;
@@ -30,6 +35,11 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+    }
+     void Start()
+    {
+        currentHp = maxHp;
+        UpdateHpBar();
     }
 
     void Update()
@@ -124,4 +134,42 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
+    // ===================== DAMAGE =====================
+    public virtual void TakeDamage(float damage)
+{
+    currentHp -= damage;
+    currentHp = Mathf.Max(currentHp, 0);
+
+    UpdateHpBar();
+
+    if (currentHp <= 0)
+    {
+        Die();
+    }
+}
+
+
+    private void Die()
+{
+    Destroy(gameObject);
+}
+    private void UpdateHpBar()
+{
+    if (hpBar != null)
+    {
+        hpBar.fillAmount = currentHp / maxHp;
+    }
+
+}
+public void Heal(float healValue)
+{
+    if (currentHp < maxHp)
+    {
+        currentHp += healValue;
+        currentHp = Mathf.Min(currentHp, maxHp);
+
+    UpdateHpBar();
+    }
+}
+
 }

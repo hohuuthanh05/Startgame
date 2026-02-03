@@ -127,7 +127,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00000011920929, y: 0.16582163}
+  m_Offset: {x: -0.002526641, y: 0.15554045}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -137,7 +137,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.92665195, y: 0.3698769}
+  m_Size: {x: 0.90644014, y: 0.34931454}
   m_EdgeRadius: 0
 --- !u!114 &5652024829180931037
 MonoBehaviour:
@@ -153,3 +153,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   moveSpeed: 15
   timeDestroy: 3
+  damage: 2
+  bloodPrefab: {fileID: 6333067797638635094, guid: 58a752399499a2141b762b9d983159d5, type: 3}
