@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - Energy
   - Explosion
+  - Coin
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -58,6 +60,9 @@ TagManager:
   - name: player
     uniqueID: 2374494473
     locked: 0
+  - name: Item
+    uniqueID: 3570722703
+    locked: 0
   - name: Bullet
     uniqueID: 578988563
     locked: 0
@@ -87,6 +92,8 @@ TagManager:
     locked: 0
   - name: Explosion
     uniqueID: 3379672509
+  - name: Ui
+    uniqueID: 3273286337
     locked: 0
   m_RenderingLayers:
   - Default
