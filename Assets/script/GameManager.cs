@@ -23,7 +23,14 @@ public class GameManager : MonoBehaviour
 
     private void UpdateScore()
     {
-        scoreText.text = score.ToString();
+        if (scoreText != null)
+        {
+            scoreText.text = score.ToString();
+        }
+        else
+        {
+            Debug.LogError("scoreText is not assigned in GameManager!");
+        }
     }
 
 }
