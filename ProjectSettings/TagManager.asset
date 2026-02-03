@@ -6,11 +6,14 @@ TagManager:
   tags:
   - Bullet
   - Arrow
+<<<<<<< HEAD
   - Enemy
   - Energy
   - Explosion
   - Coin
   - Ground
+=======
+>>>>>>> parent of 4be7de9 (UPDATE)
   layers:
   - Default
   - TransparentFX
@@ -48,15 +51,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: BackGround
-    uniqueID: 3006739953
-    locked: 0
-  - name: Ground
-    uniqueID: 3430485291
-    locked: 0
-  - name: ForeGround
-    uniqueID: 3877775095
-    locked: 0
   - name: player
     uniqueID: 2374494473
     locked: 0
@@ -78,15 +72,10 @@ TagManager:
   - name: Sword
     uniqueID: 986288123
     locked: 0
-  - name: enemy
-    uniqueID: 3713977515
-    locked: 0
-  - name: blood
-    uniqueID: 1317888153
-    locked: 0
   - name: HP
     uniqueID: 2434728105
     locked: 0
+<<<<<<< HEAD
   - name: Energy
     uniqueID: 2228244887
     locked: 0
@@ -95,5 +84,7 @@ TagManager:
   - name: Ui
     uniqueID: 3273286337
     locked: 0
+=======
+>>>>>>> parent of 4be7de9 (UPDATE)
   m_RenderingLayers:
   - Default
