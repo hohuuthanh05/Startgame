@@ -3,17 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - Bullet
-  - Arrow
-<<<<<<< HEAD
-  - Enemy
-  - Energy
-  - Explosion
-  - Coin
-  - Ground
-=======
->>>>>>> parent of 4be7de9 (UPDATE)
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -21,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - Ground
+  - 
   - 
   - 
   - 
@@ -51,40 +41,5 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: player
-    uniqueID: 2374494473
-    locked: 0
-  - name: Item
-    uniqueID: 3570722703
-    locked: 0
-  - name: Bullet
-    uniqueID: 578988563
-    locked: 0
-  - name: gun
-    uniqueID: 3612094321
-    locked: 0
-  - name: Bow
-    uniqueID: 4106914727
-    locked: 0
-  - name: arrow
-    uniqueID: 2703961123
-    locked: 0
-  - name: Sword
-    uniqueID: 986288123
-    locked: 0
-  - name: HP
-    uniqueID: 2434728105
-    locked: 0
-<<<<<<< HEAD
-  - name: Energy
-    uniqueID: 2228244887
-    locked: 0
-  - name: Explosion
-    uniqueID: 3379672509
-  - name: Ui
-    uniqueID: 3273286337
-    locked: 0
-=======
->>>>>>> parent of 4be7de9 (UPDATE)
   m_RenderingLayers:
   - Default

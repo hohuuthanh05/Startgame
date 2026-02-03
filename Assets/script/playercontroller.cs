@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
 
+<<<<<<< HEAD
     [Header("Jump")]
     [SerializeField] private float jumpForce = 15f;
     [SerializeField] private Transform groundCheck;
@@ -26,11 +27,24 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator animator;
+=======
+    private int jumpCount;
+    private float moveInput;
+    private GameManager gameManager;
+>>>>>>> parent of a550c64 (Revert "Add: Trap, GameOvreUI")
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+<<<<<<< HEAD
         animator = GetComponent<Animator>();
+=======
+        gameManager = FindFirstObjectByType<GameManager>();
+    }
+
+    void Start()
+    {
+>>>>>>> parent of a550c64 (Revert "Add: Trap, GameOvreUI")
 
         if (rb == null)
         {
@@ -39,9 +53,15 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
+<<<<<<< HEAD
     {
         if (rb == null) return;
 
+=======
+    {   
+        if (gameManager.IsGameOver()) return;
+        moveInput = Input.GetAxis("Horizontal");
+>>>>>>> parent of a550c64 (Revert "Add: Trap, GameOvreUI")
         CheckGround();
         HandleMovement();
         HandleJump();
@@ -52,6 +72,7 @@ public class PlayerController : MonoBehaviour
     // ===================== GROUND CHECK =====================
     void CheckGround()
     {
+<<<<<<< HEAD
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
             groundCheckRadius,
@@ -60,6 +81,11 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
             canDoubleJump = true;
+=======
+        if (gameManager.IsGameOver()) return;
+        HandleMovement();
+        BetterJumpPhysics();
+>>>>>>> parent of a550c64 (Revert "Add: Trap, GameOvreUI")
     }
 
     // ===================== MOVE =====================
