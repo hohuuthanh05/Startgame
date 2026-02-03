@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Bullet
+  - Arrow
+  - Trap
+  - Ground
+  - Coin
   layers:
   - Default
   - TransparentFX
@@ -11,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Ground
   - 
   - 
   - 
@@ -40,6 +45,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 2346900751
+    locked: 0
+  - name: ForeGround
+    uniqueID: 3687772419
+    locked: 0
+  - name: BackGround
+    uniqueID: 3126615849
     locked: 0
   m_RenderingLayers:
   - Default

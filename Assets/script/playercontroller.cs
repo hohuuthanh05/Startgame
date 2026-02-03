@@ -26,31 +26,32 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator animator;
-    private int jumpCount;
-    private float moveInput;
-    private GameManager gameManager;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        gameManager = FindFirstObjectByType<GameManager>();
-    }
-
-    void Start()
-    {
 
         if (rb == null)
         {
             Debug.LogError("Rigidbody2D component is missing on " + gameObject.name);
         }
+
+        // Auto-create groundCheck if not assigned
+        if (groundCheck == null)
+        {
+            GameObject groundCheckObj = new GameObject("GroundCheck");
+            groundCheckObj.transform.SetParent(transform);
+            groundCheckObj.transform.localPosition = new Vector3(0, -0.8f, 0);
+            groundCheck = groundCheckObj.transform;
+            Debug.LogWarning("GroundCheck was not assigned. Created automatically at position (0, -0.8, 0)");
+        }
     }
 
     void Update()
     {
-        if (rb == null) return;   
-        if (gameManager.IsGameOver()) return;
-        moveInput = Input.GetAxis("Horizontal");
+        if (rb == null) return;
+
         CheckGround();
         HandleMovement();
         HandleJump();
@@ -61,14 +62,44 @@ public class PlayerController : MonoBehaviour
     // ===================== GROUND CHECK =====================
     void CheckGround()
     {
+        // Kiểm tra an toàn trước khi dùng groundCheck
+        if (groundCheck == null)
+        {
+            Debug.LogError("GroundCheck vẫn null! Vui lòng kiểm tra lại Inspector.");
+            return;
+        }
+
+        // Kiểm tra groundLayer có được set chưa
+        if (groundLayer == 0)
+        {
+            Debug.LogWarning("Ground Layer chưa được set! Vào Inspector chọn layer Ground.");
+        }
+
+        bool wasGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
             groundCheckRadius,
             groundLayer
         );
 
+        // Debug log khi trạng thái thay đổi
+        if (wasGrounded != isGrounded)
+        {
+            Debug.Log($"Ground Check: {(isGrounded ? "CHẠM ĐẤT" : "KHÔNG CHẠM ĐẤT")} - Position: {groundCheck.position}");
+        }
+
         if (isGrounded)
             canDoubleJump = true;
+    }
+
+    // Vẽ Ground Check radius trong Scene view để debug
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = isGrounded ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
     }
 
     // ===================== MOVE =====================
@@ -135,14 +166,5 @@ public class PlayerController : MonoBehaviour
 
         animator.SetBool("isRunning", Mathf.Abs(rb.linearVelocity.x) > 0.1f);
         animator.SetBool("isJumping", !isGrounded);
-    }
-
-    // ===================== DEBUG =====================
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck == null) return;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }
