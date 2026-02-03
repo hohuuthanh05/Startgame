@@ -36,6 +36,11 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody2D component is missing on " + gameObject.name);
+        }
     }
      void Start()
     {
@@ -45,6 +50,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (rb == null) return;
+
         CheckGround();
         HandleMovement();
         HandleJump();
@@ -68,7 +75,7 @@ public class PlayerController : MonoBehaviour
     // ===================== MOVE =====================
     void HandleMovement()
     {
-        if (isDashing) return;
+        if (isDashing || rb == null) return;
 
         float moveInput = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
@@ -82,6 +89,8 @@ public class PlayerController : MonoBehaviour
     // ===================== JUMP + DOUBLE JUMP =====================
     void HandleJump()
     {
+        if (rb == null) return;
+
         if (Input.GetButtonDown("Jump"))
         {
             if (isGrounded)
@@ -99,6 +108,8 @@ public class PlayerController : MonoBehaviour
     // ===================== DASH =====================
     void HandleDash()
     {
+        if (rb == null) return;
+
         if (Input.GetKeyDown(KeyCode.F) && Time.time > nextDashTime)
         {
             isDashing = true;
@@ -121,7 +132,7 @@ public class PlayerController : MonoBehaviour
     // ===================== ANIMATION =====================
     void UpdateAnimation()
     {
-        if (animator == null) return;
+        if (animator == null || rb == null) return;
 
         animator.SetBool("isRunning", Mathf.Abs(rb.linearVelocity.x) > 0.1f);
         animator.SetBool("isJumping", !isGrounded);
